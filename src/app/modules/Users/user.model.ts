@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { TUser } from './user.interface';
-
+import bcrypt from 'bcrypt';
+import config from '../../config';
 const userSchema = new Schema<TUser>(
   {
     name: {
@@ -20,6 +21,7 @@ const userSchema = new Schema<TUser>(
       type: String,
       required: [true, 'Password is required'],
       minlength: [6, 'Password must be at least 6 characters long'],
+      select: 0,
     },
     phone: {
       type: String,
@@ -34,11 +36,30 @@ const userSchema = new Schema<TUser>(
       type: String,
       required: true,
       enum: ['admin', 'user'],
+      default: 'user',
     },
   },
   {
     timestamps: true,
   },
 );
+
+//Set the Password encrypted and save db and when get then the password is '' empty string
+userSchema.pre('save', async function (next) {
+  const user = this;
+  //hashing password and save into db
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
+});
+
+//post save middleware / hook
+// set '' after saving password
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
 
 export const User = model<TUser>('User', userSchema);
