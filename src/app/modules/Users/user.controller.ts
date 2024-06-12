@@ -16,8 +16,9 @@ const getUserData = catchAsync(async (req, res) => {
 });
 
 const updateUserData = catchAsync(async (req, res) => {
+  const updateData = req.body;
   const userEmail = req.user.userEmail;
-  const result = await UserServices.getUserDataFromDB(userEmail);
+  const result = await UserServices.updateUserDataIntoDB(userEmail, updateData);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

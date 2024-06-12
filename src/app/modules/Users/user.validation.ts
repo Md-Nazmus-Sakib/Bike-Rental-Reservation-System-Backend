@@ -11,12 +11,8 @@ const createUserValidationSchema = z.object({
       .trim(),
     password: z.string().min(1, { message: 'Password is required' }),
 
-    phone: z
-      .string()
-      .min(1, { message: 'Phone number is required' })
-      .regex(/^\+?[1-9]\d{1,14}$/, {
-        message: 'Please enter a valid phone number',
-      }),
+    phone: z.string().min(1, { message: 'Phone number is required' }),
+
     address: z.string().min(1, { message: 'Address is required' }),
     role: z.enum(['admin', 'user']).optional(),
   }),

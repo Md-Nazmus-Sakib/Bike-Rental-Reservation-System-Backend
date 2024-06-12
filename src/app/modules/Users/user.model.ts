@@ -26,7 +26,7 @@ const userSchema = new Schema<TUser>(
     phone: {
       type: String,
       required: [true, 'Phone number is required'],
-      match: [/^\+?[1-9]\d{1,14}$/, 'Please enter a valid phone number'],
+      min: [1, 'Phone Number is Not Empty'],
     },
     address: {
       type: String,
