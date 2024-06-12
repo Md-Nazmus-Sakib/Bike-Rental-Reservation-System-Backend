@@ -1,10 +1,11 @@
 import config from '../../config';
 import { TUser } from '../Users/user.interface';
 import { User } from '../Users/user.model';
-import jwt, { JwtPayload } from 'jsonwebtoken';
 import { TLoginUser } from './auth.interface';
 import bcrypt from 'bcrypt';
 import { createToken } from './auth.utils';
+import AppError from '../../errors/AppErrors';
+import httpStatus from 'http-status';
 
 const createUserIntoDB = async (userData: TUser) => {
   const result = await User.create(userData);
@@ -14,14 +15,17 @@ const createUserIntoDB = async (userData: TUser) => {
 const loginUser = async (payload: TLoginUser) => {
   // checking if the user is exist
 
-  const user = await User.findOne({ email: payload?.email });
+  const user = await User.findOne({ email: payload?.email }).select(
+    '+password',
+  );
+
   if (!user) {
-    throw new Error('This user is not found !');
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
   }
 
   // Ensure both passwords are defined before comparison
   if (!payload?.password || !user?.password) {
-    throw new Error('Password not provided!');
+    throw new AppError(httpStatus.NOT_FOUND, 'Password not provided!!');
   }
 
   // Compare the provided password with the stored hashed password
@@ -31,7 +35,7 @@ const loginUser = async (payload: TLoginUser) => {
   );
 
   if (!isPasswordCorrect) {
-    throw new Error('Incorrect password!');
+    throw new AppError(httpStatus.FORBIDDEN, 'Incorrect password!');
   }
 
   //create token and sent to the  client
