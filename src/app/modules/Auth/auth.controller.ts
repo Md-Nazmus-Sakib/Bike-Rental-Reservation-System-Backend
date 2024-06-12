@@ -1,11 +1,11 @@
-//==========================================================
-
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponce';
 import { AuthServices } from './auth.service';
 
-//Create student Controller
+//==========================================================
+
+//Create User Controller
 const createUser = catchAsync(async (req, res, next) => {
   const userData = req.body;
   const result = await AuthServices.createUserIntoDB(userData);
@@ -18,8 +18,26 @@ const createUser = catchAsync(async (req, res, next) => {
   });
 });
 
+//=========================================================
+
+//==========================================================
+
+//Login User Controller
+const loginUser = catchAsync(async (req, res, next) => {
+  const loginUserData = req.body;
+  const result = await AuthServices.loginUser(loginUserData);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User is Logged in successfully',
+    data: result,
+  });
+});
+
 //==============================================================
 
 export const AuthController = {
   createUser,
+  loginUser,
 };

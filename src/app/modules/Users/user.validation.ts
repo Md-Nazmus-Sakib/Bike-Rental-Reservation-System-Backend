@@ -18,9 +18,7 @@ const createUserValidationSchema = z.object({
         message: 'Please enter a valid phone number',
       }),
     address: z.string().min(1, { message: 'Address is required' }),
-    role: z.enum(['admin', 'user'], {
-      message: 'Role must be either admin or user',
-    }),
+    role: z.enum(['admin', 'user']).optional(),
   }),
 });
 
