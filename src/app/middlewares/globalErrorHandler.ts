@@ -5,6 +5,7 @@ import { TErrorSources } from '../interface/error';
 import config from '../config';
 import handleValidationError from '../errors/handleValidationError';
 import handleCastError from '../errors/handleCastError';
+import handleDuplicateError from '../errors/handleDuplicateError';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // Default Value
@@ -35,6 +36,14 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   //Unknown route Cast Error Handler
   else if (err?.name === 'CastError') {
     const simplifiedError = handleCastError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
+  }
+
+  //Duplicate Error
+  else if (err?.code === 11000) {
+    const simplifiedError = handleDuplicateError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;
