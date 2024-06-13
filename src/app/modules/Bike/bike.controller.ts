@@ -15,7 +15,45 @@ const createBike = catchAsync(async (req, res, next) => {
     data: result,
   });
 });
+const getAllBike = catchAsync(async (req, res, next) => {
+  const result = await BikeServices.getAllBikeFromDB();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Bikes are retrieved successfully',
+    data: result,
+  });
+});
+
+const updateBikeInfo = catchAsync(async (req, res) => {
+  const updateData = req.body;
+  const { id } = req.params;
+  const result = await BikeServices.updateBikeInfoIntoDB(id, updateData);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Bike updated successfully',
+    data: result,
+  });
+});
+
+const deleteBike = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await BikeServices.deleteBikeFromDB(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Bike deleted successfully',
+    data: result,
+  });
+});
 
 export const BikeController = {
   createBike,
+  getAllBike,
+  updateBikeInfo,
+  deleteBike,
 };

@@ -19,4 +19,43 @@ const createBikeValidationSchema = z.object({
   }),
 });
 
-export default createBikeValidationSchema;
+const updateBikeValidationSchema = z.object({
+  body: z.object({
+    name: z
+      .string()
+      .trim()
+      .min(1, { message: 'Bike Name is required' })
+      .optional(),
+    description: z
+      .string()
+      .trim()
+      .min(1, { message: 'Bike Description is required' })
+      .optional(),
+    pricePerHour: z
+      .number()
+      .nonnegative({ message: 'Bike Rate is required' })
+      .optional(),
+    isAvailable: z.boolean().optional().default(true).optional(),
+    cc: z.number().nonnegative({ message: 'CC is required' }).optional(),
+    year: z
+      .number()
+      .int()
+      .nonnegative({ message: 'Manufacturing year is required' })
+      .optional(),
+    model: z
+      .string()
+      .trim()
+      .min(1, { message: 'Bike Model is required' })
+      .optional(),
+    brand: z
+      .string()
+      .trim()
+      .min(1, { message: 'Bike Brand is required' })
+      .optional(),
+  }),
+});
+
+export const BikeValidationSchema = {
+  createBikeValidationSchema,
+  updateBikeValidationSchema,
+};
