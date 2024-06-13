@@ -3,7 +3,7 @@ import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponce';
 import { BikeServices } from './bike.service';
 
-//Create User Controller
+//Create Bike Controller
 const createBike = catchAsync(async (req, res, next) => {
   const userData = req.body;
   const result = await BikeServices.createBikeIntoDB(userData);
