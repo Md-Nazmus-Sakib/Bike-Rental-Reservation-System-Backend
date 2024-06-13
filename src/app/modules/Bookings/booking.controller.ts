@@ -15,11 +15,24 @@ const createBooking = catchAsync(async (req, res, next) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Bike Booked successfully',
+    message: 'Rental created successfully',
+    data: result,
+  });
+});
+
+const updateBookingInfo = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await BookingServices.updateBookingInfoIntoDB(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Bike returned successfully',
     data: result,
   });
 });
 
 export const BookingController = {
   createBooking,
+  updateBookingInfo,
 };

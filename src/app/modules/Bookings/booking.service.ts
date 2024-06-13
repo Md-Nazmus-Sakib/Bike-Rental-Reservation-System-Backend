@@ -65,6 +65,56 @@ const createBookingIntoDB = async (
   }
 };
 
+const updateBookingInfoIntoDB = async (id: string) => {
+  // Find the bike by its ID
+  const rental = await Booking.findById(id);
+
+  // Check if the bike is found
+  if (!rental) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Bike Booking not found');
+  }
+
+  // Check if the bike is not available
+  if (rental.isReturned === true) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Bike is already returned');
+  }
+  const bike = await Bike.findById(rental.bikeId);
+  if (!bike) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Bike not found');
+  }
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    const pricePerHour = bike?.pricePerHour as number;
+    // Calculate the total cost based on rental duration
+    const startTime = new Date(rental.startTime);
+    const returnTime = new Date();
+    const durationInHours = Math.ceil(
+      (returnTime.getTime() - startTime.getTime()) / (1000 * 60 * 60),
+    );
+    const totalCost = durationInHours * pricePerHour;
+
+    // Update the rental with return time, total cost, and isReturned status
+    rental.returnTime = returnTime;
+    rental.totalCost = totalCost;
+    rental.isReturned = true;
+    await rental.save({ session });
+
+    // Update the bike's availability status
+    bike.isAvailable = true;
+    await bike.save({ session });
+
+    await session.commitTransaction();
+    session.endSession();
+    return rental;
+  } catch (err: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new Error(err);
+  }
+};
+
 export const BookingServices = {
   createBookingIntoDB,
+  updateBookingInfoIntoDB,
 };
