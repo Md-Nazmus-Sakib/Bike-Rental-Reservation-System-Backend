@@ -14,7 +14,11 @@ app.use(cors());
 app.use('/api', router);
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
+  res.status(200).json({
+    success: true,
+    message:
+      'Welcome to the Bike Rental Reservation API! Use /api/bikes  to See All Bike Data.',
+  });
 });
 
 // Global Error Handel

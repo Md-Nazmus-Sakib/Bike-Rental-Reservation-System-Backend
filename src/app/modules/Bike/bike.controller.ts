@@ -4,7 +4,7 @@ import sendResponse from '../../utils/sendResponce';
 import { BikeServices } from './bike.service';
 
 //Create Bike Controller
-const createBike = catchAsync(async (req, res, next) => {
+const createBike = catchAsync(async (req, res) => {
   const userData = req.body;
   const result = await BikeServices.createBikeIntoDB(userData);
 
@@ -15,7 +15,7 @@ const createBike = catchAsync(async (req, res, next) => {
     data: result,
   });
 });
-const getAllBike = catchAsync(async (req, res, next) => {
+const getAllBike = catchAsync(async (req, res) => {
   const result = await BikeServices.getAllBikeFromDB();
   if (result.length === 0) {
     sendResponse(res, {

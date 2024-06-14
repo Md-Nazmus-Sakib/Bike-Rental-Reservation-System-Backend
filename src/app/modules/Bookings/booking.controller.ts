@@ -4,11 +4,13 @@ import sendResponse from '../../utils/sendResponce';
 import { BookingServices } from './booking.service';
 
 //Create Booking Controller
-const createBooking = catchAsync(async (req, res, next) => {
+const createBooking = catchAsync(async (req, res) => {
   const bookingData = req.body;
+  const userRole = req.user.role;
   const userEmail = req.user.userEmail;
   const result = await BookingServices.createBookingIntoDB(
     userEmail,
+    userRole,
     bookingData,
   );
 

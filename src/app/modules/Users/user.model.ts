@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Schema, model } from 'mongoose';
 import { TUser } from './user.interface';
 import bcrypt from 'bcrypt';
@@ -45,14 +46,30 @@ const userSchema = new Schema<TUser>(
 );
 
 //Set the Password encrypted and save db and when get then the password is '' empty string
+// userSchema.pre('save', async function (next) {
+//   const user = this;
+//   //hashing password and save into db
+//   user.password = await bcrypt.hash(
+//     user.password,
+//     Number(config.bcrypt_salt_rounds),
+//   );
+//   next();
+// });
+
 userSchema.pre('save', async function (next) {
-  const user = this;
-  //hashing password and save into db
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds),
-  );
-  next();
+  if (this.isModified('password') || this.isNew) {
+    try {
+      this.password = await bcrypt.hash(
+        this.password,
+        Number(config.bcrypt_salt_rounds),
+      );
+      next();
+    } catch (err) {
+      next(err as Error);
+    }
+  } else {
+    next();
+  }
 });
 
 // // set '' after saving password

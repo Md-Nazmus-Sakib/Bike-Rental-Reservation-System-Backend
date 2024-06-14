@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponce';
@@ -6,7 +9,7 @@ import { AuthServices } from './auth.service';
 //==========================================================
 
 //Create User Controller
-const createUser = catchAsync(async (req, res, next) => {
+const createUser = catchAsync(async (req, res) => {
   const userData = req.body;
   const result = await AuthServices.createUserIntoDB(userData);
 
@@ -23,7 +26,7 @@ const createUser = catchAsync(async (req, res, next) => {
 //==========================================================
 
 //Login User Controller
-const loginUser = catchAsync(async (req, res, next) => {
+const loginUser = catchAsync(async (req, res) => {
   const loginUserData = req.body;
   const result = await AuthServices.loginUser(loginUserData);
 

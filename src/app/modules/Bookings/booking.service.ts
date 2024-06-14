@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppErrors';
 import { User } from '../Users/user.model';
@@ -8,10 +9,15 @@ import { Booking } from './booking.model';
 
 const createBookingIntoDB = async (
   userEmail: string,
+  userRole: string,
   payload: Partial<TBooking>,
 ) => {
   const bookingData: Partial<TBooking> = {};
 
+  //checking if the user is admin
+  if (userRole === 'admin') {
+    throw new AppError(httpStatus.FORBIDDEN, 'Admin Cannot Rentals.');
+  }
   //   checking if the user is valid
   const user = await User.findOne({ email: userEmail });
   //User is not found then throw error
@@ -82,13 +88,22 @@ const updateBookingInfoIntoDB = async (id: string) => {
   if (!bike) {
     throw new AppError(httpStatus.NOT_FOUND, 'Bike not found');
   }
+
+  const startTime = new Date(rental.startTime);
+  const returnTime = new Date();
+  // Ensure returnTime is greater than startTime
+  if (returnTime <= startTime) {
+    throw new AppError(
+      httpStatus.NOT_ACCEPTABLE,
+      'Return time must be greater than start time',
+    );
+  }
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
     const pricePerHour = bike?.pricePerHour as number;
     // Calculate the total cost based on rental duration
-    const startTime = new Date(rental.startTime);
-    const returnTime = new Date();
+
     const durationInHours = Math.ceil(
       (returnTime.getTime() - startTime.getTime()) / (1000 * 60 * 60),
     );

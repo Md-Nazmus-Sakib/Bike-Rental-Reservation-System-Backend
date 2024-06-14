@@ -1,5 +1,7 @@
-import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
-import { ZodError, ZodIssue } from 'zod';
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { ErrorRequestHandler } from 'express';
+import { ZodError } from 'zod';
 import handleZodError from '../errors/handleZodError';
 import { TErrorSources } from '../interface/error';
 import config from '../config';
