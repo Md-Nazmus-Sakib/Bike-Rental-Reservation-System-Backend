@@ -8,7 +8,8 @@ import AppError from '../../errors/AppErrors';
 import httpStatus from 'http-status';
 
 const createUserIntoDB = async (userData: TUser) => {
-  const result = await User.create(userData);
+  const createdUser = await User.create(userData);
+  const result = await User.findById(createdUser._id).select('-role');
   return result;
 };
 
@@ -37,12 +38,15 @@ const loginUser = async (payload: TLoginUser) => {
   if (!isPasswordCorrect) {
     throw new AppError(httpStatus.FORBIDDEN, 'Incorrect password!');
   }
+  if (!user.email || !user.role) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Email or Role not Found.');
+  }
 
   //create token and sent to the  client
 
   const jwtPayload = {
     userEmail: user.email,
-    role: user.role || 'user',
+    role: user.role,
   };
 
   const accessToken = createToken(
@@ -51,8 +55,11 @@ const loginUser = async (payload: TLoginUser) => {
 
     config.jwt_refresh_expires_in as string,
   );
+  const responseUserData = await User.findById(user._id).select('-role');
+
   return {
     accessToken,
+    responseUserData,
   };
 };
 export const AuthServices = {

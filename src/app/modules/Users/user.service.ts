@@ -3,7 +3,7 @@ import AppError from '../../errors/AppErrors';
 import { TUser } from './user.interface';
 import { User } from './user.model';
 const getUserDataFromDB = async (userEmail: string) => {
-  const result = await User.findOne({ email: userEmail });
+  const result = await User.findOne({ email: userEmail }).select('+role');
 
   return result;
 };

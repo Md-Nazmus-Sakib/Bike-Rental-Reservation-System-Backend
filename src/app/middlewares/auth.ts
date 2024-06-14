@@ -5,6 +5,7 @@ import httpStatus from 'http-status';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
 import { TUserRole } from '../modules/Users/user.interface';
+import { User } from '../modules/Users/user.model';
 
 const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -28,13 +29,33 @@ const auth = (...requiredRoles: TUserRole[]) => {
       token,
       config.jwt_access_token as string,
     ) as JwtPayload;
-    // console.log(decoded);
-    const { role, userEmail } = decoded;
 
-    if (requiredRoles && !requiredRoles.includes(role)) {
-      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized !');
+    if (!decoded) {
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        'You have no access to this route.',
+      );
     }
 
+    const { userEmail, role } = decoded;
+
+    if (requiredRoles && !requiredRoles.includes(role)) {
+      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized !!!');
+    }
+    const existUser = await User.findOne({ email: userEmail });
+    if (!existUser) {
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        'You have no access to this route.',
+      );
+    }
+
+    if (existUser.role !== role) {
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        'You have no access to this route.',
+      );
+    }
     req.user = decoded as JwtPayload;
     next();
   });

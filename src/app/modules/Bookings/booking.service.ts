@@ -114,7 +114,18 @@ const updateBookingInfoIntoDB = async (id: string) => {
   }
 };
 
+const getBookingInfoIntoDB = async (email: string) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  // Find the booking information by the user's ID
+  const bookingInfo = await Booking.find({ userId: user._id });
+  return bookingInfo;
+};
+
 export const BookingServices = {
   createBookingIntoDB,
   updateBookingInfoIntoDB,
+  getBookingInfoIntoDB,
 };

@@ -18,5 +18,10 @@ router.put(
   auth(USER_ROLE.admin),
   BookingController.updateBookingInfo,
 );
+router.get(
+  '/',
+  auth(USER_ROLE.admin, USER_ROLE.user),
+  BookingController.getBookingInfo,
+);
 
 export const BookingRoutes = router;

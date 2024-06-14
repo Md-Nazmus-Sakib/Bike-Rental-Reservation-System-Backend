@@ -55,15 +55,16 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-// set '' after saving password
-userSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
-});
+// // set '' after saving password
+// userSchema.post('save', function (doc, next) {
+//   doc.password = '';
+//   next();
+// });
 
 userSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;
+
   return obj;
 };
 

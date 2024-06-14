@@ -11,7 +11,7 @@ const createUser = catchAsync(async (req, res, next) => {
   const result = await AuthServices.createUserIntoDB(userData);
 
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: httpStatus.CREATED,
     success: true,
     message: 'User registered successfully',
     data: result,
@@ -31,7 +31,8 @@ const loginUser = catchAsync(async (req, res, next) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'User is Logged in successfully',
-    data: result,
+    token: result.accessToken,
+    data: result.responseUserData,
   });
 });
 
