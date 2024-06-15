@@ -8,10 +8,10 @@ import AppError from '../../errors/AppErrors';
 import httpStatus from 'http-status';
 
 const createUserIntoDB = async (userData: TUser) => {
-  // Check if the role is not 'user'
-  if (userData.role && userData.role !== 'user') {
-    throw new AppError(httpStatus.EXPECTATION_FAILED, 'Role must be user');
-  }
+  // // Check if the role is not 'user'
+  // if (userData.role && userData.role !== 'user') {
+  //   throw new AppError(httpStatus.EXPECTATION_FAILED, 'Role must be user');
+  // }
 
   const createdUser = await User.create(userData);
   const result = await User.findById(createdUser._id).select('-role');

@@ -6,6 +6,10 @@ Welcome to the Bike Rental Reservation System Backend! This project provides the
 
 Live URL is https://bike-rental-reservation-system-backend-livid.vercel.app/
 
+## Overview Video URL
+
+Project Overview Video link: https://drive.google.com/file/d/1Xa1UGU_BWsfY_-_1IXxS_P8Xn80hJmsF/view?usp=sharing
+
 ## Features
 
 - User Authentication: Sign up, log in, and profile management.
@@ -37,7 +41,7 @@ Live URL is https://bike-rental-reservation-system-backend-livid.vercel.app/
 
    ```bash
    git clone https://github.com/Md-Nazmus-Sakib/Bike-Rental-Reservation-System-Backend
-   cd bike-rental-backend
+   cd Bike-Rental-Reservation-System-Backend
    ```
 
 2. **Install dependencies:**
@@ -71,6 +75,13 @@ Live URL is https://bike-rental-reservation-system-backend-livid.vercel.app/
    ```
 
    The server should be running on `http://localhost:5000`.
+
+## Admin Info
+
+```bash
+Admin Email: admin@example.com
+Password: password123
+```
 
 ## API Endpoints
 
